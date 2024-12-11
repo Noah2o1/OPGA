@@ -13,7 +13,7 @@ let matchedCards = 0;
 let isFlipping = false;
 let timerInterval = null;
 let gameStarted = false; // New variable to track game start
-let clickDisabled = false; // Flag to disable clicks temporarily
+let isGameLocked = true; // New variable to lock the game at the start
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -35,16 +35,15 @@ function createBoard() {
 
     const cardFront = document.createElement('div');
     cardFront.classList.add('card-front');
+    const frontImage = document.createElement('img');
+    frontImage.src = 'pictures/back.png'; // Back image (now .png)
+    cardFront.appendChild(frontImage);
 
     const cardBack = document.createElement('div');
     cardBack.classList.add('card-back');
     const backImage = document.createElement('img');
-    backImage.src = 'pictures/back.png'; // Back image
+    backImage.src = `pictures/${cardValue}.png`; // Fruit image (now .png)
     cardBack.appendChild(backImage);
-
-    const frontImage = document.createElement('img');
-    frontImage.src = `pictures/${cardValue}.png`; // Front image based on fruit name
-    cardFront.appendChild(frontImage);
 
     cardInner.appendChild(cardFront);
     cardInner.appendChild(cardBack);
@@ -57,27 +56,34 @@ function createBoard() {
     cardElement.addEventListener('click', handleCardClick);
   });
 
-  // Start zoom-in animation
   board.classList.add('zoom-in');
-
-  // Delay flipping cards until after the zoom-in animation
   setTimeout(() => {
     initialCardFlipSequence();
+
+    // Unlock the game after 8 seconds
+    setTimeout(() => {
+      isGameLocked = false;
+    }, 8000); // 8-second delay
   }, 2000); // Adjust delay (2 seconds here)
 }
 
 function handleCardClick(event) {
+  if (isGameLocked) return; // Prevent clicking if the game is locked
+
   const card = event.currentTarget;
 
-  if (clickDisabled || 
-      isFlipping || // Prevent flipping during animations
-      card.classList.contains('matched') || // Ignore already matched cards
-      card.classList.contains('flip')) { // Ignore cards already flipped
-    return;
+  if (!gameStarted) {
+    gameStarted = true; // Start the game on the first click
+    startTimer();
   }
 
-  // Disable clicking temporarily
-  clickDisabled = true;
+  if (
+    isFlipping || // Prevent flipping during animations
+    card.classList.contains('matched') || // Ignore already matched cards
+    card.classList.contains('flip') // Ignore cards already flipped
+  ) {
+    return;
+  }
 
   card.classList.add('flip');
   flippedCards.push(card);
@@ -86,11 +92,6 @@ function handleCardClick(event) {
     isFlipping = true;
     checkForMatch();
   }
-
-  // Re-enable clicking after a short delay (e.g., 0.5 seconds)
-  setTimeout(() => {
-    clickDisabled = false;
-  }, 500); // Adjust delay as needed
 }
 
 function checkForMatch() {
@@ -163,6 +164,7 @@ resetButton.addEventListener('click', () => {
   matchedCards = 0;
   isFlipping = false;
   gameStarted = false; // Reset game start
+  isGameLocked = true; // Lock the game at the start
   congratulationsMessage.style.display = 'none';
   createBoard();
 });
