@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Align items to the left */
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding-left: 20px; /* Add padding to the left */
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #333;
+    }
+
+    .menu {
+      margin-top: 20px;
+    }
+
+    .menu button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-bottom: 10px; /* Space between buttons */
+      transition: background-color 0.3s ease;
+      width: 200px; /* Set fixed width for buttons */
+    }
+
+    .menu button:hover {
+      background-color: #45a049;
+    }
+
+    .menu button:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <h1>Memory Game</h1>
+  <div class="menu">
+    <button onclick="window.location.href='levels.html'">Play</button>
+    <button onclick="alert('Settings will be added later!')">Settings</button>
+    <button onclick="alert('Stats will be added later!')">Stats</button> <!-- New stats button -->
+  </div>
+</body>
+</html>
